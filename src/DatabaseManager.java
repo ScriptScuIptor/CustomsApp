@@ -60,7 +60,30 @@ public class DatabaseManager {
         }
     }
 
+    public static User findUserByUsername(String username) {
+        String query = "SELECT u.id, u.username, u.password_hash, r.role_name " +
+                "FROM users u JOIN roles r ON u.role_id = r.id " +
+                "WHERE u.username = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password_hash"),
+                        rs.getString("role_name")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Ошибка при поиске пользователя: " + e.getMessage());
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
-        getAllDrivers(); // Вызываем метод, чтобы вывести всех водителей
+        getAllDrivers();
     }
 }

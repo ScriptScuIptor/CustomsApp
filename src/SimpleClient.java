@@ -15,6 +15,15 @@ public class SimpleClient {
              Scanner scanner = new Scanner(System.in)) {
 
             System.out.println(reader.readLine());
+            String username = scanner.nextLine();
+            writer.println(username);
+
+            System.out.println(reader.readLine());
+            String password = scanner.nextLine();
+            writer.println(password);
+
+            System.out.println(reader.readLine());
+            System.out.println(reader.readLine());
 
             while (true) {
                 System.out.print("Введите команду (например, ADD_DRIVER Иван Иванов AB1234567): ");

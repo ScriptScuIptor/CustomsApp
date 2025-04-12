@@ -16,7 +16,20 @@ public class ClientHandler extends Thread {
                 OutputStream output = clientSocket.getOutputStream();
                 PrintWriter writer = new PrintWriter(output, true)
         ) {
-            writer.println("✅ Подключение успешно! Введите команду:");
+            writer.println("Введите имя пользователя:");
+            String username = reader.readLine();
+            writer.println("Введите пароль:");
+            String password = reader.readLine();
+
+            User user = DatabaseManager.findUserByUsername(username);
+            if (user == null || !user.getPasswordHash().equals(PasswordHasher.hashPassword(password))) {
+                writer.println("❌ Неверные учетные данные. Отключение.");
+                clientSocket.close();
+                return;
+            }
+
+            writer.println("✅ Успешный вход. Ваша роль: " + user.getRole());
+            writer.println("✅ Введите команду:");
 
             String command;
             while ((command = reader.readLine()) != null) {
